@@ -1,0 +1,24 @@
+# docker-compose.yml
+
+version: "3.8"
+services:
+  redis:
+    image: "redis:latest"
+    container_name: "redis"
+    ports:
+      - "6379:6379"
+    networks:
+      - log_net
+
+  distributed_logging:
+    build: .
+    container_name: "distributed_logging"
+    depends_on:
+      - redis
+    environment:
+      - REDIS_ADDR=redis:6379 # Use the "redis" service name as the Redis server address
+    networks:
+      - log_net
+
+networks:
+  log_net:
